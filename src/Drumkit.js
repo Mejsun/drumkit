@@ -1,9 +1,11 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 
 function Drumkit() {
     const [displayName, setDisplayName] = useState();
-    const [audiosrc, setAudiosrc] = useState();
-        
+    //const [audiosrc, setAudiosrc] = useState();
+    
+    const audiosrc = useRef(null)
+
     const drumpads = [
     {keyCode: 81, keyTrigger: 'Q', name: 'Heater-1', url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3'},
     {keyCode: 87, keyTrigger: 'W', name: 'Heater-2', url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3'},
@@ -15,15 +17,17 @@ function Drumkit() {
     {keyCode: 88, keyTrigger: 'X', name: 'Kick', url: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3'},
     {keyCode: 67, keyTrigger: 'C', name: 'Closed-HH', url: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3'}
     ]
-      
+
     const handleClicked = (e) => {
         for(let i=0; i<drumpads.length; i++){
         let name  = drumpads[i].name;
         let source = drumpads[i].url;
         if(e.target.innerText === drumpads[i].keyTrigger){
         setDisplayName(name);
-        console.log(source)
-        setAudiosrc(source);
+        audiosrc.current.play(source)
+        console.log(audiosrc)
+        //setAudiosrc(source);
+        //source.play()
         }}} 
         
     return (
@@ -33,12 +37,12 @@ function Drumkit() {
                 <div className='board'>
                 {drumpads.map((drumpad, i) => {return(
                     <div>
-                      <button className='drum-pad' key={Math.random()} id={drumpad.name} onClick={handleClicked}> {drumpad.keyTrigger} </button>               
+                        <button className='drum-pad' key={Math.random()} id={drumpad.name} onClick={handleClicked}> {drumpad.keyTrigger} </button>               
+                        <audio className='clip' id={drumpad.keyTrigger} ref={audiosrc} src={drumpad.url} type="audio/mpeg"> </audio>
                     </div>
                      )})}
                    </div>
                 <div className= 'secondscreen'>{displayName}</div>
-                <audio className='clip'> <source src={audiosrc} type="audio/mpeg"/> </audio>
             </div>
         </div>
           );
